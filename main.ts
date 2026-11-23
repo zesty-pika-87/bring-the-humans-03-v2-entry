@@ -44,6 +44,14 @@ if (typeof parsed !== 'object' || parsed === null || typeof (parsed as { url?: u
   process.exit(1);
 }
 
+const videoUrl = (parsed as { url: string }).url;
+
+// A placeholder is not a video yet: warn loudly instead of failing, so the
+// file can be committed early and filled in once the ad is posted.
+if (!videoUrl.startsWith('https://www.tiktok.com/')) {
+  console.warn(`Warning: VIDEO.json does not hold a TikTok address yet (${videoUrl})`);
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 writeFileSync(TARGET, payload);
 
@@ -54,4 +62,4 @@ if (writtenBack !== payload) {
   process.exit(1);
 }
 
-console.log(`VIDEO.json handed in: ${(parsed as { url: string }).url}`);
+console.log(`VIDEO.json handed in to ${TARGET}: ${videoUrl}`);
